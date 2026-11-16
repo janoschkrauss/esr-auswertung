@@ -1,0 +1,92 @@
+% ESR of DPPH and MnCl2 -- lab report, ETH physics lab, measurement 23 October 2026
+% Build: make   (figures and appendix table: make figures, runs the analysis in ../analysis)
+\documentclass[a4paper,11pt,DIV=12,abstract=true,numbers=noenddot]{scrartcl}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[american]{babel}
+\usepackage[autostyle]{csquotes}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage[locale=US, uncertainty-mode=separate, per-mode=symbol, range-phrase={\,\text{--}\,}, range-units=single, group-digits=integer]{siunitx}
+\DeclareSIUnit{\angstrom}{\text{\AA}}
+\usepackage[version=4]{mhchem}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage[font=small,labelfont=bf,format=plain]{caption}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+\crefname{figure}{Fig.}{Figs.}
+\Crefname{figure}{Fig.}{Figs.}
+\crefname{table}{Table}{Tables}
+\Crefname{table}{Table}{Tables}
+\crefname{equation}{Eq.}{Eqs.}
+\Crefname{equation}{Eq.}{Eqs.}
+\crefname{section}{Section}{Sections}
+\Crefname{section}{Section}{Sections}
+\crefname{subsection}{Section}{Sections}
+\Crefname{subsection}{Section}{Sections}
+\crefname{appendix}{Appendix}{Appendices}
+\Crefname{appendix}{Appendix}{Appendices}
+
+\setlist{nosep, leftmargin=*}
+\setkomafont{disposition}{\normalcolor\bfseries}
+\setcapindent{0pt}
+\addtokomafont{caption}{\small}
+\setlength{\abovecaptionskip}{4pt}
+
+% ---------------------------------------------------------------- Macros
+\newcommand*{\dd}{\mathrm{d}}
+\newcommand*{\ii}{\mathrm{i}}
+\newcommand*{\muB}{\mu_\mathrm{B}}
+\newcommand*{\kB}{k_\mathrm{B}}
+\newcommand*{\Bpp}{\Delta B_\mathrm{pp}}
+\newcommand*{\Bhalf}{\Delta B_{1/2}}
+\newcommand*{\Br}{B_\mathrm{r}}
+\newcommand*{\Bm}{B_\mathrm{m}}
+\newcommand*{\QL}{Q_\mathrm{L}}
+\newcommand*{\lamg}{\lambda_\mathrm{g}}
+\newcommand*{\chiI}{\chi'}
+\newcommand*{\chiII}{\chi''}
+% keep the space around binary operators (including the \pm of siunitx) from shrinking to zero in tight lines
+\AtBeginDocument{\medmuskip=4mu plus 2mu minus 1mu}
+\newenvironment{exercise}[1]{\par\smallskip\noindent$\blacktriangleright$\,\textbf{Preparatory exercise #1.}\ }{\par\smallskip}
+
+\subject{Physics Laboratory III \textperiodcentered{} ETH Zürich}
+\title{Electron Spin Resonance of DPPH and \ce{MnCl2}}
+\author{Janosch Krauss}
+\date{Measured on 23~October 2026 \textperiodcentered{} Report of 31~October 2026}
+
+\begin{document}
+\maketitle
+
+\input{parts/abstract}
+
+\begin{center}\small
+  Raw data, analysis code and \LaTeX{} source: \url{https://github.com/janoschkrauss/esr-auswertung}
+\end{center}
+
+\setcounter{tocdepth}{1}
+\RedeclareSectionCommand[tocbeforeskip=.3em plus 1pt]{section}
+\tableofcontents
+
+\input{parts/introduction}
+\input{parts/theory}
+\input{parts/setup}
+\input{parts/results}
+\input{parts/discussion}
+
+\appendix
+\input{parts/appendix}
+
+\section*{Acknowledgment}
+I used the AI model Claude by Anthropic~\cite{claude} for help with the analysis code and the text.
+
+{\small\input{parts/references}}
+
+\end{document}

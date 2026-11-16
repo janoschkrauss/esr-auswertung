@@ -1,0 +1,62 @@
+% ====================================================================
+\section{Discussion}\label{sec:discussion}
+% ====================================================================
+\begin{table}[t]
+  \centering\small
+  \caption{Results at a glance ($1\sigma$; one-sided systematics in parentheses).}
+  \label{tab:results}
+  \begin{tabularx}{\textwidth}{@{}l l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    Quantity & Result & Comparison \\
+    \midrule
+    Hall probe at sample position & \qty{-8.5}{\percent} (analog), \qty{-2.3}{\percent} (display) & DPPH as standard \\
+    Hysteresis of the yoke & \qtyrange{14}{24}{mT}, residual field \qtyrange{17}{24}{mT} & -- \\
+    DPPH: $g$ with display & \num{2.052} & \num{2.0036}~\cite{poole1996} \\
+    DPPH: $\Bpp$, $T_2$ & \qty{0.240(15)}{mT}, \qty{27(2)}{ns} (up to \qty{35}{ns}) & \qtyrange{0.15}{0.47}{mT}~\cite{poole1996} \\
+    Modulation at \qty{1}{V} & $\Bm<\qty{0.059}{mT}$ & recommended: $\Bpp/5$ to $\Bpp/3$ \\
+    Power dependence & $S_\mathrm{pp}\propto P^{\num{0.98(3)}}$ & square-law diode: $P^1$ \\
+    Bridge leak & $\rho\approx\num{0.26}$, $\cos\psi\approx\num{-0.78}$ & -- \\
+    Dispersion, model-free & $D=\qty{-84.3(7)}{\degree}$ & model fit: \ang{-87.9} \\
+    Guide wavelength & $\lamg=46^{+8}_{-6}\,\unit{mm}$ & WR-90: \qty{44.9}{mm} \\
+    Cutoff frequency & $\nu_\mathrm c=6.7^{+0.8}_{-1.1}\,\unit{GHz}$ & WR-90: \qty{6.56}{GHz} \\
+    \ce{MnCl2}: $\Bhalf$, $T_2$ & \qty{88.8(23)}{mT}, \qty{62(2)}{ps} & without exchange: about \qty{250}{mT} \\
+    \ce{MnCl2}: $g$ & \num{2.058(11)} (\num{-0.025}) & $\num{2.001}+\Delta g$, $\Delta g=\numrange{0.028}{0.055}$ \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\paragraph{Magnetic field.}
+The magnetic-field calibration was the largest source of uncertainty in this experiment (\cref{tab:results} collects
+all results). At the sample position the Hall probe reads too low, and only the DPPH calibration turns the control voltage into a
+reliable field. Next time I would first move the probe to the height and orientation with the highest reading, as the
+course supervisor recommends. Any deficit left after that would point to the gaussmeter calibration. The DPPH
+calibration holds only for scans run exactly like the DPPH scans. Because the field lags behind the set point, starting
+just \qty{75}{mV} earlier shifts the line by \qty{1.2}{mT}, almost five times the DPPH line width. This
+causes the three large systematics of the report: the DPPH width may be overestimated by up to \qty{22}{\percent}, the
+field reference for \ce{MnCl2} is uncertain, and the \ce{MnCl2} scan may have run on a different hysteresis branch. A
+small marker sample would avoid all three, for example a grain of DPPH next to the sample in the cavity. It would appear
+in every scan, with the same magnetic history as the measurement. Without a marker, every scan should start from
+\qty{0}{V} with the same dwell time and sweep rate, and every deviation should be noted in the lab notebook.
+
+\paragraph{Modulation and DPPH.}
+For the modulation amplitude I only have an upper bound. A small pick-up coil at the sample position could measure it
+directly: with 100 turns on \qty{10}{mm^2} and $\Bm=\qty{0.05}{mT}$ it would give about \qty{40}{\micro V}, easy to
+measure with the lock-in. The value of $T_2$ rests on the convolution model, because the large powder sample sees a
+field distribution of \qty{0.82}{mT}, almost four times the HWHM of the line. With only a few grains in the center of the
+cavity, a plain Lorentzian fit would give $T_2$ directly.
+
+\paragraph{Bridge.}
+The lab manual uses the main attenuator for the power dependence and the attenuator in the reference arm for
+balancing the bridge, and my measurements support this choice. With X375A the signal follows the power linearly, as
+expected for a diode at low power, while X382A changes only the reference. The Hilbert-transform fit shows without any
+line model that absorption and dispersion obey the Kramers--Kronig relations within the noise. The leak of
+the cavity makes phases comparable only within one measurement block and limits the accuracy of $\lamg$ to about
+\qty{15}{\percent}. Several plunger positions in quick succession would give a more accurate value. The complex amplitude
+then moves on a circle around the fixed leak contribution, and the rotation angle per millimeter can be fitted
+independently of it.
+
+\paragraph{\texorpdfstring{\ce{MnCl2}}{MnCl2} and copper.}
+The \ce{MnCl2} line shows the typical features of exchange narrowing. It is Lorentzian, has no hyperfine structure, and is
+only a third as wide as the dipolar fields would make it without exchange. If the deviation of its $g$-factor from 2 comes
+from the large width, as I suspect, it should almost vanish at higher frequency. The copper measurement has to be repeated
+with a properly tuned source, reading the frequency from the counter before and after each scan.

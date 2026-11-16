@@ -1,0 +1,80 @@
+% ====================================================================
+\section{Error analysis}\label{app:errors}
+% ====================================================================
+
+\paragraph{Fits.}
+I fitted all lines by least squares with equal weights (\texttt{curve\_fit} from SciPy). The exception is the joint
+fit of the two \ce{MnCl2} scans in \cref{sec:mncl2}, where I weighted each scan, and each part of the search scan,
+by the inverse of its own residual scatter. I scaled the covariance matrix with the residual variance
+$s^2=\sum_ir_i^2/(N-n_\mathrm p)$ ($N$ data points, $n_\mathrm p$ fit parameters), so that the uncertainties reflect
+the actual scatter. For averages over several scans I took the larger of the internal and external uncertainty:
+\begin{equation}\label{eq:wmean}
+  \bar x=\frac{\sum_jw_jx_j}{\sum_jw_j},\qquad w_j=\sigma_j^{-2},\qquad
+  \sigma_{\bar x}=\max\!\left[\Bigl(\sum_jw_j\Bigr)^{-1/2},\ \frac{s_x}{\sqrt n}\right],
+\end{equation}
+where $s_x$ is the standard deviation of the $n$ individual values.
+
+\paragraph{Reference field.}
+By \cref{eq:resonance}, $B_\text{DPPH}=h\nu/(g_\text{DPPH}\muB)$, so
+\begin{equation}
+  \frac{\sigma_B}{B}=\sqrt{\left(\frac{\sigma_g}{g}\right)^2+\left(\frac{\sigma_\nu}{\nu}\right)^2}
+  =\sqrt{(\num{1.0e-4})^2+(\num{2.3e-6})^2}=\num{1.0e-4},
+\end{equation}
+and $\sigma_B=\qty{0.033}{mT}$. Only the literature value of $g_\text{DPPH}$ counts; the frequency contributes nothing.
+
+\paragraph{Field scale.}
+With $B(U)=k\,B_\text{Hall}(U)$ and $k=B_\text{DPPH}/B_\text{Hall}(U_\text{D})$ (\cref{eq:fieldscale}),
+\begin{equation}
+  \frac{\sigma_k}{k}=\sqrt{\left(\frac{\sigma_{B_\text{DPPH}}}{B_\text{DPPH}}\right)^2
+  +\left(\frac{B_\text{Hall}'(U_\text{D})\,\sigma_{U_\text{D}}}{B_\text{Hall}(U_\text{D})}\right)^2}
+  =\num{1.4e-4},
+\end{equation}
+where $\sigma_{U_\text{D}}=\qty{1.9}{mV}/\sqrt{11}$. I converted widths with the slope
+$B'=k\,B_\text{Hall}'(U_\text{D})=\qty{60.76}{mT/V}$. Different descriptions of the calibration curve
+(polynomial degree, scale or zero-point error of the display) give a slope uncertainty of
+$\sigma_{B'}/B'=\qty{3.0}{\percent}$. The field lag (\cref{sec:field}) is not included; it enters as a one-sided
+systematic.
+
+\paragraph{Line width and \texorpdfstring{$T_2$}{T2}.}
+With $\gamma=g\muB/\hbar$ of the respective sample, $\Bpp=2B'G/\sqrt3$ and $T_2=1/(\gamma B'G)$. Both carry the
+relative uncertainties of $G$ and $B'$:
+\begin{equation}
+  \frac{\sigma_{T_2}}{T_2}=\frac{\sigma_{\Bpp}}{\Bpp}=\sqrt{\left(\frac{\sigma_G}{G}\right)^2+\left(\frac{\sigma_{B'}}{B'}\right)^2}.
+\end{equation}
+Here $\sigma_G$ includes the fit error and the model uncertainty from \cref{sec:dpph}.
+
+\paragraph{\texorpdfstring{$g$}{g}-factor relative to DPPH.}
+For a line at $U_x$ and frequency $\nu_x$,
+\begin{equation}\label{eq:grel}
+  g_x=\frac{h\nu_x}{\muB\,k\,B_\text{Hall}(U_x)}
+  =g_\text{DPPH}\,\frac{\nu_x}{\nu_\text{DPPH}}\,\frac{B_\text{Hall}(U_\text{D})}{B_\text{Hall}(U_x)} .
+\end{equation}
+The factor $k$ drops out, and with it the scale error of the probe. The remaining uncertainties are those of the
+literature value $g_\text{DPPH}$, the reference position $U_\text{D}$ and the line position $U_x$:
+\begin{equation}
+  \frac{\sigma_{g_x}}{g_x}=\sqrt{\left(\frac{\sigma_{g_\text{DPPH}}}{g_\text{DPPH}}\right)^2
+  +\left(\frac{B'_\text{Hall}(U_\text{D})\,\sigma_{U_\text{D}}}{B_\text{Hall}(U_\text{D})}\right)^2
+  +\left(\frac{B'_\text{Hall}(U_x)\,\sigma_{U_x}}{B_\text{Hall}(U_x)}\right)^2}.
+\end{equation}
+For \ce{MnCl2}, $\sigma_{U_\text{D}}=\qty{12}{mV}$ (\cref{eq:udmn}) contributes \num{0.0046} and the fit error of $U_x$
+contributes \num{0.0024}. I estimated the other contributions in \cref{sec:mncl2} (line shape \num{0.0076}, sample in
+the cavity \num{0.0052}, shape of the calibration curve and $g_\text{DPPH}$ together \num{0.0010}) from how much $g$
+changes when I vary the line model, the calibration curve and the corrections. All contributions added in quadrature
+give \num{0.0106}.
+
+\paragraph{Guide wavelength.}
+The phase rotation $\Delta\varphi$ for the plunger displacement $\Delta z$ gives $\lamg=\ang{720}\,\Delta z/|\Delta\varphi|$
+and $\nu_\mathrm c=\nu\sqrt{1-(\lambda_0/\lamg)^2}$ with $\lambda_0=c/\nu$. Error propagation gives
+\begin{equation}
+  \frac{\sigma_{\lamg}}{\lamg}=\sqrt{\left(\frac{\sigma_{\Delta\varphi}}{\Delta\varphi}\right)^2
+  +\left(\frac{\sigma_{\Delta z}}{\Delta z}\right)^2},\qquad
+  \sigma_{\nu_\mathrm c}=\frac{c^2}{\nu_\mathrm c\,\lamg^3}\,\sigma_{\lamg} .
+\end{equation}
+Compared with the phase, the plunger scale (\qty{0.01}{mm}) contributes nothing. Because $\lamg$ is inversely
+proportional to $|\Delta\varphi|$, the symmetric interval $\Delta\varphi=\qty{-88(13)}{\degree}$ becomes the asymmetric
+interval $\lamg=46^{+8}_{-6}\,\unit{mm}$. I computed its limits directly from $|\Delta\varphi|=\ang{75}$ and \ang{101}.
+
+% ====================================================================
+\section{Fit results of the DPPH scans}\label{app:fits}
+% ====================================================================
+\input{parts/tab_dpph}
