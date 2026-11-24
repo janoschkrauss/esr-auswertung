@@ -10,7 +10,7 @@ from scipy.optimize import brentq, curve_fit, least_squares, minimize_scalar
 from scipy.signal import fftconvolve, hilbert
 from scipy.special import dawsn
 
-from esr import (DG_DPPH, DU, G_DPPH, H, K_B, MU_B, NU_DPPH, NU_MNCL2, RESULTS, _abs, _disp, b_res, calibration,
+from esr import (DG_DPPH, DU, G_DPPH, H, K_B, MU_B, NU_DPPH, NU_MNCL2, RESULTS, SIGN, _abs, _disp, b_res, calibration,
                  fit, g_from, hall_probe, initial_guess, line, line_conv, line_gauss, line_kernel, load)
 
 RESULTS.mkdir(exist_ok=True)
@@ -89,6 +89,7 @@ for key, (file, u_mod, x382, x375, direction) in SCANS.items():
                      rms_L=rL.std(), rms_G=rG.std(), rms_C=rC.std())
 
 with open(RESULTS / "dpph_fits.csv", "w") as fh:
+    # signed amplitudes and phases refer to the reported signal S = SIGN * X (see esr.py)
     fh.write("scan,mod_V,X382A_dB,X375A_dB,direction,pp_uV,"
              "U0_L,G_L_mV,phi_L_deg,rms_L,rms_G,"
              "U0_C,dU0_C,G_C_mV,dG_C_mV,lam_mV,dlam_mV,a_C,d_C,phi_C_deg,magnitude_C,rms_C\n")
@@ -96,9 +97,9 @@ with open(RESULTS / "dpph_fits.csv", "w") as fh:
         pL, pC, eC = f["pL"], f["pC"], f["eC"]
         # full precision: rounding happens only once, in tables.py
         fh.write(f"{k},{f['mod']},{f['x382']},{f['x375']},{f['dir']},{f['pp']:.5f},"
-                 f"{pL[0]:.7f},{pL[1]*1e3:.5f},{np.degrees(np.arctan2(pL[3], pL[2])):.4f},{f['rms_L']:.6f},{f['rms_G']:.6f},"
+                 f"{pL[0]:.7f},{pL[1]*1e3:.5f},{np.degrees(np.arctan2(SIGN*pL[3], SIGN*pL[2])):.4f},{f['rms_L']:.6f},{f['rms_G']:.6f},"
                  f"{pC[0]:.7f},{eC[0]:.7f},{pC[1]*1e3:.5f},{eC[1]*1e3:.5f},{pC[4]*1e3:.5f},{eC[4]*1e3:.5f},"
-                 f"{pC[2]:.5f},{pC[3]:.5f},{np.degrees(np.arctan2(pC[3], pC[2])):.4f},{np.hypot(pC[2], pC[3]):.5f},"
+                 f"{SIGN*pC[2]:.5f},{SIGN*pC[3]:.5f},{np.degrees(np.arctan2(SIGN*pC[3], SIGN*pC[2])):.4f},{np.hypot(pC[2], pC[3]):.5f},"
                  f"{f['rms_C']:.6f}\n")
 
 
@@ -401,7 +402,7 @@ R["power"] = dict(exponent_24_27=n_exp, d_exponent_24_27=float(np.sqrt(C_n[0, 0]
 
 BR = ["13", "14", "15", "16", "16b", "17b"]
 c = np.array([complex(*FITS[k]["pC"][2:4]) for k in BR])
-phi_br = np.degrees(np.unwrap(np.angle(c)))
+phi_br = np.degrees(np.unwrap(np.angle(SIGN * c)))          # phase of the reported signal S = SIGN X
 # DC voltage of the diode at zero field, read on the oscilloscope (lab notebook)
 D2_dB = np.array([0, 2, 4, 6, 10, 15, 20.0])
 D2_mV = np.array([-1.50, -0.228, 0.247, 0.351, 0.318, 0.254, 0.210])
@@ -437,18 +438,18 @@ block_ratio = a_2dB / (alpha_a + beta_a)
 R["bridge"] = dict(scan=BR, X382A_dB=[FITS[k]["x382"] for k in BR], magnitude_uV=abs(c).tolist(),
                    phase_deg=phi_br.tolist(), magnitude_0_over_20dB=float(abs(c[0]) / abs(c[-1])),
                    phase_0_to_20dB=float(phi_br[-1] - phi_br[0]),
-                   absorption_alpha_uV=float(alpha_a), absorption_beta_uV=float(beta_a),
+                   absorption_alpha_uV=float(SIGN * alpha_a), absorption_beta_uV=float(SIGN * beta_a),
                    absorption_rms_uV=float((ya - np.polyval([alpha_a, beta_a], xa)).std()),
                    A_zero_absorption_dB=float(-10 * np.log10(-beta_a / alpha_a)),
-                   a_16_uV=float(FITS["16"]["pC"][2]), a_16b_uV=float(FITS["16b"]["pC"][2]),
-                   d_16_uV=float(FITS["16"]["pC"][3]), d_16b_uV=float(FITS["16b"]["pC"][3]),
+                   a_16_uV=float(SIGN * FITS["16"]["pC"][2]), a_16b_uV=float(SIGN * FITS["16b"]["pC"][2]),
+                   d_16_uV=float(SIGN * FITS["16"]["pC"][3]), d_16b_uV=float(SIGN * FITS["16b"]["pC"][3]),
                    D2_mV=D2_mV.tolist(), D2_V0_mV=float(V0_d2), D2_dV0_mV=float(np.sqrt(C_d2[0, 0])),
                    D2_rho_cos_psi=float(rho_cos), D2_rms_mV=float((D2_mV - np.polyval([k2, k1, k0], r_D2)).std()),
                    D2_rms_single_pass_mV=float((D2_mV - np.polyval(np.polyfit(r_D2_1, D2_mV, 2), r_D2_1)).std()),
                    D2_zero_min_mV=float(z_min), leak_lower_bound=float(-rho_cos), D2_zero_mV=float(z_D2),
                    leak_rho=float(rho_d2), leak_cos_psi=float(cpsi_d2), bias_mV=Vb.tolist(),
                    A_min_bias_dB=float(-10 * np.log10(-rho_cos)), bias_min_mV=float(V0_d2 * rho_d2**2 * (1 - cpsi_d2**2)),
-                   a_line_r1_uV=float(alpha_a + beta_a), a_13_24_27_at_2dB_uV=a_2dB.tolist(),
+                   a_line_r1_uV=float(SIGN * (alpha_a + beta_a)), a_13_24_27_at_2dB_uV=(SIGN * a_2dB).tolist(),
                    block_ratio=block_ratio.tolist(), block_ratio_mean=float(block_ratio.mean()),
                    block_step_dB=float(-10 * np.log10(block_ratio.mean())),
                    block_step_scatter_dB=float(np.std(-10 * np.log10(block_ratio), ddof=1)))

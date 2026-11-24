@@ -5,11 +5,13 @@
 \begin{figure}[t]
   \centering
   \resizebox{\textwidth}{!}{\input{setup.tikz}}
-  \caption{X-band reflection spectrometer. Microwave path (thick): the DRO source feeds the attenuator X375A through an
-  isolator and a directional coupler (frequency counter). Placed \emph{before} the magic T, it attenuates the cavity and
-  reference waves together. The reference arm (attenuator X382A, plunger) sets the magnitude and phase of the
-  reference. Signal and control lines (dashed): the lock-in supplies the control voltage $U$ for the magnet power
-  supply (Aux Out) and the modulation (Sine Out, \qty{133}{Hz}) and reads the Hall probe (Aux In) and the diode (In A).}
+  \caption{X-band reflection spectrometer, drawn with the arms of the magic T as on the real T-piece. Microwave path
+  (thick): the DRO source feeds the main attenuator X375A through an isolator and a directional coupler (frequency
+  counter). Placed \emph{before} the magic T, it attenuates the cavity and reference waves together. The reference arm
+  (top, opposite the cavity) with the reference-arm attenuator X382A and the plunger sets the magnitude and phase of the
+  reference. The diode sits at the $\Delta$ port (right). Signal and control lines (dashed): the lock-in supplies the
+  control voltage $U$ for the magnet power supply (Aux Out, a DAC output) and the modulation (Sine Out, \qty{133}{Hz})
+  and reads the Hall probe (Aux In, an ADC input) and the diode (In A).}
   \label{fig:setup}
 \end{figure}
 
@@ -27,40 +29,54 @@ detector diode (HP\,8471E) sits at the difference port ($\Delta$) of the magic T
 The electromagnet runs on a current-regulated power supply whose set point is the control voltage
 $U=\qtyrange{0}{8}{V}$ from the lock-in. At the DPPH resonance the current is \qty{0.43}{A}. The lock-in's Sine Out
 (\qty{133}{Hz}) drives the modulation coils via an amplifier. A gaussmeter (F.\,W.\,Bell\,5080) measures the field
-with a Hall probe. I recorded its analog output (\qty{1}{V} corresponds to \qty{1}{T}) and read its display by hand. A LabVIEW
+with a Hall probe. I recorded its analog output (\qty{1}{V} corresponds to \qty{1}{T}) and read its display directly. A LabVIEW
 program sweeps $U$ in small steps and stores the lock-in outputs $X$ and $Y$ at each step. I set the lock-in phase so
-that practically the whole signal lies in $X$ ($Y/X=\num{-0.05}$), and I analyze $X$.
+that practically the whole signal lies in $X$ ($Y/X=\num{-0.05}$), and I analyze this component as $S=-X$. I set the
+phase with Auto Phase at
+$U=\qty{5.9}{V}$, on the high-field flank of the \ce{MnCl2} line (\cref{tab:settings}). There the derivative of the
+absorption is negative, but Auto Phase makes the signal positive, so the lock-in phase is \ang{180} off the usual
+convention and the raw $X$ has the opposite sign. All fits, figures and signed amplitudes therefore refer to $S=-X$. With it, the derivative of an
+absorption line is positive on the rising (low-field) side and negative on the falling (high-field) side, as in
+\cref{fig:theory}c.
 
 \paragraph{Measurement program.}
 \Cref{tab:scans} lists the analyzed measurements. Before each DPPH scan I set $U$ from \qty{0}{V} to the start value
-and held it for \qtyrange{30}{60}{s}. A typical sweep ran at \qty{0.48}{mV/s} and crossed the DPPH line
-($\Bpp\approx\qty{4}{mV}$ in units of the control voltage) in about \qty{8}{s}. This is $27\tau$ for the lock-in time
-constant $\tau=\qty{300}{ms}$ and satisfies the rule of thumb from \cref{sec:modulation}. The DPPH sample is a large
+and held it for \qtyrange{30}{60}{s}. A typical sweep ran at \qty{0.48}{mV/s} of control voltage. To make this independent of the equipment, I convert it
+with the slope $\dd B/\dd U=\qty{60.76}{mT/V}$ at the DPPH line (\cref{eq:fieldscale}) and the coil current of
+\qty{0.43}{A} at $U=\qty{4.95}{V}$, i.e., \qty{87}{mA/V} if the current is proportional to the set point. The field
+then rose at \qty{29}{\micro T/s} (\qty{0.29}{G/s}) and the coil current at about
+\qty{42}{\micro A/s}. The DPPH line ($\Bpp=\qty{0.24}{mT}$, \qty{4}{mV} of control voltage) was crossed in about
+\qty{8}{s}. This is $27\tau$ for the lock-in time constant $\tau=\qty{300}{ms}$ (the averaging time of its low-pass
+filter) and satisfies the rule of thumb from \cref{sec:modulation}. \Cref{tab:scans} gives the field rate of every
+scan. These rates use the static slope; during a sweep the field lags behind the set value (\cref{sec:field}), so the
+actual rate may be up to \qty{22}{\percent} lower. The DPPH sample is a large
 volume of powder. I left out the cut-off scans 07 and 17 (repeated as 07b and 17b) and the first point of every file,
 where the signal had not settled. The DPPH search scan 06 overloaded the lock-in, so I only use its zero
 crossing, noted in my lab notebook (\cref{sec:mncl2}).
 
 \begin{table}[t]
   \centering\footnotesize
-  \caption{Analyzed measurements (23 Oct 2026). $v$: sweep rate of the control voltage. Mod.: Sine Out modulation
+  \caption{Analyzed measurements (23 Oct 2026). $v$: sweep rate of the control voltage; $\dot B$: the corresponding
+  field rate $v\,\dd B/\dd U$ with the static slope at the line (\qty{60.76}{mT/V} for DPPH, \qty{61.1}{mT/V} for
+  \ce{MnCl2} and \ce{Cu^2+}; for 01--03 the mean slope over the full range). Mod.: Sine Out modulation
   voltage, in parentheses the effective value after amplifier limiting (\cref{sec:modamp}). Attenuators
-  X375A (cavity and reference) and X382A (reference only) in dB. Sens.: lock-in sensitivity (full scale) in \si{\micro V}.}
+  main attenuator X375A (cavity and reference) and reference-arm attenuator X382A (reference only) in dB. Sens.: lock-in sensitivity (full scale) in \si{\micro V}.}
   \label{tab:scans}
-  \setlength{\tabcolsep}{4pt}
-  \begin{tabularx}{\textwidth}{@{}l l l l S[table-format=-1.2] l c c c >{\raggedright\arraybackslash}X@{}}
+  \setlength{\tabcolsep}{2.6pt}
+  \begin{tabularx}{\textwidth}{@{}l l l l S[table-format=-2.2] S[table-format=-4.0] l c c c >{\raggedright\arraybackslash}X@{}}
     \toprule
-    No. & Time & Sample & $U$ (V) & {$v$ (\si{mV/s})} & Mod.\ (V) & X375A & X382A & Sens. & Purpose \\
+    No. & Time & Sample & $U$ (V) & {$v$ (\si{mV/s})} & {$\dot B$ (\si{\micro T/s})} & Mod.\ (V) & X375A & X382A & Sens. & Purpose \\
     \midrule
-    01--03 & 10:00 & empty & \numrange{0.10}{8.05} & 25 & -- & -- & -- & -- & Hall probe up, down, up \\
-    22 & 11:41 & \ce{MnCl2} & \numrange{2.00}{7.98} & 2.86 & 4 (1.8) & 2 & 1 & 2 & \ce{MnCl2} \\
-    07b, 08 & 13:33 & DPPH & \numrange{4.84}{5.13} & 0.95 & 3; 2 (1.8 each) & 2 & 1 & 200 & modulation \\
-    09--12 & 13:56 & DPPH & \numrange{4.90}{5.01} & 0.48 & 1--0.1 & 2 & 1 & 200--10 & modulation \\
-    13--17b & 14:27 & DPPH & \numrange{4.91}{4.99} & 0.48 & 1 & 2 & 0--20 & 100--20 & reference arm \\
-    18 & 15:14 & DPPH & \numrange{4.99}{4.91} & -0.48 & 1 & 2 & 6 & 50 & down-sweep \\
-    24--27 & 15:24 & DPPH & \numrange{4.91}{4.99} & 0.48 & 1 & 6--20 & 0 & 100--5 & power series \\
-    20 & 15:55 & DPPH & \numrange{4.91}{4.99} & 0.48 & 1 & 2 & 0 & 200 & dispersion (plunger \qty{25.60}{mm}) \\
-    19 & 16:05 & -- & \num{4.90}/\num{4.95}/\num{5.00} & & -- & -- & -- & -- & gaussmeter display at sample position \\
-    29 & 16:58 & \ce{Cu^2+} & \numrange{4.40}{5.19} & 4.76 & 4 (1.8) & 2 & 0 & 2 & search \\
+    01--03 & 10:00 & empty & \numrange{0.10}{8.05} & 25 & 1500 & -- & -- & -- & -- & Hall probe up/down/up \\
+    22 & 11:41 & \ce{MnCl2} & \numrange{2.00}{7.98} & 2.86 & 175 & 4 (1.8) & 2 & 1 & 2 & \ce{MnCl2} \\
+    07b, 08 & 13:33 & DPPH & \numrange{4.84}{5.13} & 0.95 & 58 & 3; 2 (1.8) & 2 & 1 & 200 & modulation \\
+    09--12 & 13:56 & DPPH & \numrange{4.90}{5.01} & 0.48 & 29 & 1--0.1 & 2 & 1 & 200--10 & modulation \\
+    13--17b & 14:27 & DPPH & \numrange{4.91}{4.99} & 0.48 & 29 & 1 & 2 & 0--20 & 100--20 & reference arm \\
+    18 & 15:14 & DPPH & \numrange{4.99}{4.91} & -0.48 & -29 & 1 & 2 & 6 & 50 & down-sweep \\
+    24--27 & 15:24 & DPPH & \numrange{4.91}{4.99} & 0.48 & 29 & 1 & 6--20 & 0 & 100--5 & power series \\
+    20 & 15:55 & DPPH & \numrange{4.91}{4.99} & 0.48 & 29 & 1 & 2 & 0 & 200 & dispersion, plunger \qty{25.60}{mm} \\
+    19 & 16:05 & -- & \numrange{4.90}{5.00} & & & -- & -- & -- & -- & gaussmeter display at sample \\
+    29 & 16:58 & \ce{Cu^2+} & \numrange{4.40}{5.19} & 4.76 & 292 & 4 (1.8) & 2 & 0 & 2 & search \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -89,10 +105,11 @@ crossing, noted in my lab notebook (\cref{sec:mncl2}).
       $U=\qty{5.9}{V}$ before scan 22 and left unchanged afterwards; sensitivity in \cref{tab:scans} \\
     Field modulation & SR830 Sine Out, \qtyrange{0.1}{4}{V} (rms), drives the modulation coils via an amplifier, which
       limits above about \qty{1.8}{V} \\
-    Magnet power supply & Delta SM400, current-controlled; set point $U=\qtyrange{0}{8}{V}$ from SR830 Aux Out;
+    Magnet power supply & Delta SM400, current-controlled; set point $U=\qtyrange{0}{8}{V}$ from SR830 Aux Out (DAC);
       \qty{0.43}{A} at the DPPH line \\
-    Gaussmeter & F.\,W.\,Bell 5080 with Hall probe, range setting \enquote{0.000\,T}; analog output (\qty{1}{V}
-      corresponds to \qty{1}{T}) recorded via SR830 Aux In, display read by hand \\
+    Gaussmeter & F.\,W.\,Bell 5080 with Hall probe (ranges \qtylist{30;300;3000}{mT}, bandwidth dc to
+      \qty{20}{kHz}~\cite{fwbell}), range setting \enquote{0.000\,T}; analog output (\qty{1}{V}
+      corresponds to \qty{1}{T}) recorded via SR830 Aux In (ADC), display read directly \\
     Field sweep (LabVIEW program EPR\_1) & DPPH: steps of \qty{1}{mV} (\qty{2}{mV} in 07b, 08), \qty{2.1}{s} per point;
       \ce{MnCl2} (22): steps of \qty{20}{mV}, \qty{7}{s} per point; before each scan $U$ set from \qty{0}{V} to the start
       value and held for \qtyrange{30}{60}{s}; back to \qty{0}{V} after each scan \\

@@ -4,12 +4,13 @@
 
 \subsection{Resonance condition}\label{sec:resonance}
 
-The spin $\vec S$ of an electron carries the magnetic moment $\vec\mu=-g\muB\vec S/\hbar$, with the Bohr magneton
+The spin $\vec S$ of an electron together with its charge $-e$ implies a magnetic moment $\vec\mu=-g\muB\vec S/\hbar$,
+with the Bohr magneton
 $\muB$ and the $g$-factor ($g_\mathrm e=\num{2.0023}$ for the free electron). Because of the negative charge, moment
 and spin point in opposite directions. In a field $B$ the state with spin projection
 $m_S=\pm\frac12$ has the energy $E=g\muB Bm_S$, and the two levels are $\Delta E=g\muB B$ apart (Zeeman effect).
 An alternating magnetic field $B_1$ of frequency $\nu$, perpendicular to $B$, can flip the spin if the photon energy
-matches the splitting:
+matches the splitting~\cite{weil2007,slichter1990}:
 \begin{equation}\label{eq:resonance}
   h\nu=g\muB\Br
   \qquad\Longleftrightarrow\qquad
@@ -21,13 +22,13 @@ the alternating field rotates in step with this precession and can keep tilting 
 give the same condition.
 
 The $g$-factor deviates from $g_\mathrm e$ when spin-orbit coupling mixes some orbital moment into the spin. For the
-organic radical DPPH the deviation is tiny ($g=\num{2.0036}$). The same holds for \ce{Mn^2+}, whose five d electrons
+organic radical DPPH the deviation is tiny ($g=\num{2.0036}$). The same holds for \ce{Mn^2+}, whose five $d$ electrons
 together have no orbital moment ($L=0$). Dilute samples give $g=\numrange{2.000}{2.002}$~\cite{abragam1970}.
 
 The microwave drives transitions up and down equally strongly. A sample absorbs net energy only because the lower
 level is slightly more populated than the upper one. At room temperature the Boltzmann excess is
-$(N_--N_+)/N=\tanh(h\nu/2\kB T)\approx\num{7.6e-4}$, less than one part per thousand. The signal is
-small, and the whole setup (\cref{sec:detection,sec:modulation}) is built to make it visible anyway.
+$(N_--N_+)/N=\tanh(h\nu/2\kB T)\approx\num{7.6e-4}$, less than one part per thousand. This small population difference makes the signal weak, and its detection requires
+the sensitive scheme of \cref{sec:detection,sec:modulation}.
 
 \subsection{Line shape and \texorpdfstring{$T_2$}{T2}}\label{sec:lineshape}
 
@@ -35,23 +36,26 @@ The resonance has a finite width. After an excitation the spins first precess to
 rotating transverse magnetization. But each spin feels a slightly different local field from its neighbors, so the
 precessions drift out of phase. The transverse magnetization decays in the time $T_2$ (spin-spin relaxation). The
 level populations also relax to thermal equilibrium in the time $T_1$ by giving energy to the crystal
-lattice (spin-lattice relaxation). The Bloch equations describe both processes:
+lattice (spin-lattice relaxation). The Bloch equations~\cite{bloch1946} describe both processes:
 \begin{equation}\label{eq:bloch}
   \dot{\vec M}=-\gamma\,\vec M\times\vec B-\frac{M_x\hat x+M_y\hat y}{T_2}-\frac{M_z-M_0}{T_1}\,\hat z .
 \end{equation}
+Here $M_0$ is the equilibrium magnetization along the static field $\vec B\parallel\hat z$.
 In the steady state the magnetization responds to the microwave field with a complex susceptibility
 $\chi=\chiI-\ii\chiII$. $\chiII$ is \ang{90} out of phase with the field and takes energy from it
 (\emph{absorption}). $\chiI$ oscillates in phase and stores energy only temporarily (\emph{dispersion}). The
-experiment sweeps the field at fixed frequency. With $x=(B-\Br)/\Bhalf$ the solution is
+experiment sweeps the field at fixed frequency. With $x=(B-\Br)/\Bhalf$, the steady-state solution of the Bloch
+equations~\eqref{eq:bloch} in the frame rotating with the microwave field is~\cite{abragam1961,slichter1990}
 \begin{equation}\label{eq:chi}
   \chiII\propto\frac{1}{1+x^2+s},\qquad \chiI\propto\frac{x}{1+x^2+s},\qquad
   \Bhalf=\frac{1}{\gamma T_2},\qquad s=\gamma^2B_1^2T_1T_2 .
 \end{equation}
 The absorption is a Lorentzian line whose half width at half maximum (HWHM) $\Bhalf$ is inversely proportional to $T_2$.
-As for any damped oscillation, the shorter the spins stay in phase, the less sharp their frequency.
+As for any damped oscillation, the shorter the spins stay in phase (short $T_2$), the less sharp their frequency and
+the broader the resonance.
 The parameter $s$ describes saturation. If $B_1$ is so large that the microwave flips the spins faster than
 relaxation in the time $T_1$ restores equilibrium ($s\gtrsim1$), the populations equalize. The absorption then no
-longer grows with the power, and the line broadens by the factor $\sqrt{1+s}$.
+longer grows with the power, and the line broadens by the factor $\sqrt{1+s}$~\cite{abragam1961,poole1996}.
 
 \subsection{Broad lines in concentrated samples}\label{sec:width}
 
@@ -81,11 +85,13 @@ only one line remains. The DPPH line is also exchange-narrowed and very narrow, 
   \centering
   \includegraphics[width=\textwidth]{figures/theory.pdf}
   \caption{Calculated curves (no measurements) for the preparatory exercises. (a)~Absorption $\chiII$ and dispersion
-  $\chiI$ of a Lorentzian line versus field. The cavity changes its resistance by $\delta R\propto\chiII$ and its
+  $\chiI$ of a Lorentzian line versus field. In a field sweep $\chiI$ is negative below $\Br$, the mirror image of
+  the usual plot versus frequency (exercise~1). The cavity changes its resistance by $\delta R\propto\chiII$ and its
   reactance by $\delta X\propto\chiI$ (\cref{eq:rx}). (b)~As the field passes through resonance, the change
   $\delta\Gamma\propto\chiII+\ii\chiI$ of the reflected wave traces a circle ($x=(B-\Br)/\Bhalf$). The diode sees only
   its projection onto the reference phase $\varphi$. With $\varphi=0$ it sees absorption, with $\varphi=\ang{90}$
-  dispersion. The two settings are a plunger travel of $\lamg/8$ apart. (c)~Field with modulation (top), diode signal
+  dispersion. The two settings are $\lamg/4$ apart in the path of the reference wave; because of the reflection
+  geometry, this is a plunger travel of only $\lamg/8$ (preparatory exercise~2). (c)~Field with modulation (top), diode signal
   and lock-in output (bottom), here with $\Bm=\Bhalf/4$ and, for clarity, only 34 modulation periods per sweep.}
   \label{fig:theory}
 \end{figure}
@@ -108,12 +114,14 @@ $\chiII$ is a positive Lorentzian with its maximum at resonance (\cref{fig:theor
 side of the resonance and negative on the other. It has its extrema at $x=\pm1$, i.e., $\Bhalf$ away from the center,
 and further out it falls off only slowly ($\propto1/x$). Since the prefactor $\omega L_0\eta$ is constant during the
 field sweep, $\delta R$ follows the absorption exactly and $\delta X$ the dispersion. The sample takes energy from the
-cavity, making it lossier, and slightly detunes it. Sweeping the frequency instead of the field gives
-exactly the same curves, with $x=(\omega-\omega_0)T_2$.
+cavity, making it lossier, and slightly detunes it. Sweeping the frequency instead of the field gives the same
+curves with $x=(\omega_0-\omega)T_2$. Plotted against $\omega$, the dispersion is therefore mirrored: in a
+frequency sweep $\chiI$ is positive below resonance, in a field sweep it is negative below $\Br$ (\cref{fig:theory}a).
+The absorption $\chiII$ is symmetric and looks the same in both.
 \end{exercise}
 
 \paragraph{Bridge.}
-The signal is the wave reflected by the cavity. If the cavity is coupled so that nothing is reflected at resonance
+The signal is the wave reflected by the cavity~\cite{shiroka,poole1996}. If the cavity is coupled so that nothing is reflected at resonance
 (critical coupling), the sample produces a small reflected wave
 \begin{equation}\label{eq:dgamma}
   \delta\Gamma=\eta\QL\,\bigl(\chiII+\ii\chiI\bigr):
@@ -121,7 +129,7 @@ The signal is the wave reflected by the cavity. If the cavity is coupled so that
 absorption changes it in phase and dispersion \ang{90} out of phase (\cref{fig:theory}b). On its own this wave
 would hardly be measurable, because the diode measures power, $|\delta\Gamma|^2$, the square of a tiny quantity.
 A magic T, a waveguide junction with four arms, therefore mixes in a reference wave. The
-wave from the source splits between the cavity arm and a reference arm with the attenuator X382A and a movable
+wave from the source splits between the cavity arm and a reference arm with the reference-arm attenuator X382A and a movable
 short circuit (the \enquote{plunger}). The waves returning from both meet in the fourth arm, where the diode
 sits. With $E_c$ the amplitude of the wave at the cavity and $E_be^{\ii\varphi}$ the reference wave at the diode, the
 diode measures
@@ -133,8 +141,10 @@ The reference makes the signal linear in $\chi$ and amplifies it by the factor $
 absorption, dispersion or a mixture of the two.
 
 \paragraph{Waveguide and plunger.}
-The microwave travels in a rectangular waveguide of width $a$. The fundamental mode propagates only if half a
-wavelength fits across the width, that is, above the cutoff frequency $\nu_\mathrm c=c/2a$. Above cutoff the wave zigzags
+The microwave travels in a rectangular waveguide with the inner dimensions $a>b$~\cite{pozar2012}. The fundamental
+mode (TE$_{10}$) propagates only if half a wavelength fits across the width $a$, i.e., the larger dimension of the
+waveguide. The larger dimension therefore sets the lowest frequency at which the waveguide can propagate a signal, the
+cutoff frequency $\nu_\mathrm c=c/2a$. Above cutoff the wave zigzags
 between the walls, and its wavelength along the guide is longer than in free space ($\lambda_0=c/\nu$):
 \begin{equation}\label{eq:lamg_theory}
   \lamg=\frac{\lambda_0}{\sqrt{1-(\nu_\mathrm c/\nu)^2}} .
@@ -144,18 +154,21 @@ $|\Delta\varphi|=4\pi\Delta z/\lamg$.
 
 \begin{exercise}{2}
 For $\varphi=0$ the bridge measures $\chiII$ (absorption), for $\varphi=\pm\ang{90}$ it measures $\chiI$ (dispersion).
-Switching between them takes a phase change of \ang{90}, so the plunger has to move by $\Delta z=\lamg/8$. For the WR-90
+Switching between them takes a phase change of \ang{90}, i.e., a change of $\lamg/4$ in the path of the reference
+wave. In the reflection geometry the wave travels from the magic T to the plunger and back, so the path changes by
+twice the plunger travel, and the plunger has to move by only $\Delta z=\lamg/8$. For the WR-90
 waveguide ($a=\qty{22.86}{mm}$, $\nu_\mathrm c=\qty{6.557}{GHz}$) at $\nu=\qty{9.359}{GHz}$ this gives
 $\lamg=\qty{44.89}{mm}$ and $\Delta z=\qty{5.61}{mm}$.
 \end{exercise}
 
 \subsection{Field modulation and lock-in}\label{sec:modulation}
 
-The spins change the diode voltage only slightly compared with its bias $E_b^2$, which drifts slowly and
-is noisy. So a small modulation $\Bm\cos\omega_\mathrm m t$ with
+The resonance condition of the electron spins changes the diode voltage only slightly compared with its bias
+$E_b^2$, which drifts slowly and is noisy~\cite{poole1996,weil2007}. So a small modulation $\Bm\cos\omega_\mathrm m t$ with
 $\omega_\mathrm m/2\pi=\qty{133}{Hz}$ is added to the field. The diode signal follows the modulation only near
 resonance, and the lock-in picks out exactly this part. It multiplies the signal by a reference of the same
-frequency and averages over many periods (time constant $\tau$). The output is
+frequency and averages the product with a low-pass filter over many periods~\cite{sr830}. The time constant $\tau$ of
+this filter sets how long it averages: the output follows a change of the input only after a few $\tau$. The output is
 $V_\text{out}=\frac12V_sV_r\cos(\psi_r-\psi_s)$, with amplitude $V_s$ and phase $\psi_s$ of the signal and $V_r$, $\psi_r$
 of the reference. Everything at other frequencies, including drift and noise, averages out.
 
@@ -184,4 +197,4 @@ $\Bpp$, the lock-in averages the derivative over the interval $\pm\Bm$. The meas
 grows more slowly than $\Bm$ (overmodulation). For a Lorentzian, the line is \qty{1}{\percent} too broad at
 $\Bm=\Bpp/10$ and already \qty{11}{\percent} too broad at $\Bm=\Bpp/3$. The lab manual therefore recommends $\Bm$
 between one fifth and one third of the line width. The sweep must also be slow enough for the low-pass filter of the lock-in
-to follow. By a rule of thumb, crossing the line should take at least $10\tau$~\cite{shiroka}.
+to follow. By a rule of thumb, crossing the line should take at least $10\tau$~\cite{shiroka} (values in \cref{sec:setup}).

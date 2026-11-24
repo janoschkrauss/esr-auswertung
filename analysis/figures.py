@@ -10,6 +10,7 @@ import numpy as np
 from matplotlib.gridspec import GridSpec
 
 import analysis as A                       # the analysis runs on import
+from esr import SIGN                        # reported signal S = SIGN * X (lock-in phase 180 degrees off, see esr.py)
 from style import BLUE, GRAY, ORANGE, RED, WIDTH, math_ticks, panel, plt
 
 OUT = Path(__file__).resolve().parents[1] / "report" / "figures"
@@ -162,11 +163,11 @@ def fig_lineshape():
         x = (U - f["pC"][0]) * mTV                       # mT relative to B(U0) of the convolution model
         a0 = fig.add_subplot(gs[0, j])
         a1 = fig.add_subplot(gs[1, j], sharex=a0)
-        a0.plot(x, X, "o", ms=2.0, color="k", mfc="none", mew=0.5, label="Data")
-        a0.plot(x, f["fL"](U, *f["pL"]), color=GRAY, lw=0.9, label="Lorentz")
-        a0.plot(x, f["fC"](U, *f["pC"]), color=BLUE, lw=1.0, label="Convolution model")
-        a1.plot(x, f["rL"], color=GRAY, lw=0.8)
-        a1.plot(x, f["rC"], color=BLUE, lw=0.9)
+        a0.plot(x, SIGN * X, "o", ms=2.0, color="k", mfc="none", mew=0.5, label="Data")
+        a0.plot(x, SIGN * f["fL"](U, *f["pL"]), color=GRAY, lw=0.9, label="Lorentz")
+        a0.plot(x, SIGN * f["fC"](U, *f["pC"]), color=BLUE, lw=1.0, label="Convolution model")
+        a1.plot(x, SIGN * f["rL"], color=GRAY, lw=0.8)
+        a1.plot(x, SIGN * f["rC"], color=BLUE, lw=0.9)
         a1.axhline(0, color=GRAY, lw=0.4)
         lam = f["pC"][4] * mTV
         a0.text(0.97, 0.06, title + "\n" + rf"$\lambda=\qty{{{lam:.2f}}}{{mT}}$", transform=a0.transAxes,
@@ -175,9 +176,9 @@ def fig_lineshape():
         plt.setp(a0.get_xticklabels(), visible=False)
         a1.set(xlabel=r"$B-B(U_0)$ (mT)")
         if j == 0:
-            a0.set_ylabel(r"$X$ (\si{\micro V})")
+            a0.set_ylabel(r"Signal $S=-X$ (\si{\micro V})")
             a1.set_ylabel("Residual")
-            a0.legend(loc="upper left", fontsize=6.6, handlelength=0.9, handletextpad=0.4, borderaxespad=0.2)
+            a0.legend(loc="upper right", fontsize=6.6, handlelength=0.9, handletextpad=0.4, borderaxespad=0.2)
         math_ticks(a0, a1)
         panel(a0, "ab"[j])
     save(fig, "lineshape.pdf")
@@ -227,21 +228,21 @@ def fig_power():
     ax[0].errorbar(P[:1], S[:1], dS[:1], fmt="o", ms=3.4, color=RED, mfc="none", mew=0.8)
     pp_ = np.logspace(-2.2, 0.1, 30)
     ax[0].plot(pp_, np.exp(A.lnA) * pp_ ** A.n_exp, "--", color=GRAY, lw=0.8)
-    ax[0].set(xscale="log", yscale="log", xlabel=r"Power $P/P(\qty{2}{dB})$ (X375A)", ylabel=r"$S_\mathrm{pp}$ (\si{\micro V})")
+    ax[0].set(xscale="log", yscale="log", xlabel=r"Power $P/P(\qty{2}{dB})$, main attenuator X375A", ylabel=r"$S_\mathrm{pp}$ (\si{\micro V})")
     ax[0].text(0.012, 60, rf"$\propto P^{{\num{{{A.n_exp:.2f}}}}}$", fontsize=7)
     ax[0].text(0.75, 160, "13", fontsize=6.8, color=RED, ha="right")
     panel(ax[0], "a")
     # (b) series with X382A: magnitude of the line versus attenuation, compared with a power series
     att = np.array([A.FITS[k]["x382"] for k in A.BR], float)
     mag = np.array([abs(complex(*A.FITS[k]["pC"][2:4])) for k in A.BR])
-    phase = np.array([np.degrees(np.angle(complex(*A.FITS[k]["pC"][2:4]))) for k in A.BR])
+    phase = np.array([np.degrees(np.angle(SIGN * complex(*A.FITS[k]["pC"][2:4]))) for k in A.BR])
     ax[1].semilogy(att, mag, "o", ms=3.4, color=BLUE, label="measured")
     aa = np.linspace(0, 20.5, 50)
     ax[1].semilogy(aa, mag[0] * 10 ** (-aa / 10), "--", color=GRAY, lw=0.8, label=r"expected without leak ($\propto E_b$)")
     for a_, b_, p_, k in zip(att, mag, phase, A.BR):
         dy = 1.18 if k != "16b" else 0.80
         ax[1].text(a_ + 0.4, b_ * dy, rf"$\ang{{{p_:.0f}}}$", fontsize=6.0, color=BLUE, va="center")
-    ax[1].set(xlabel=r"X382A (dB)", ylabel=r"Line amplitude (\si{\micro V})", xlim=(-1, 23.5), ylim=(2, 800))
+    ax[1].set(xlabel=r"Reference-arm attenuator X382A (dB)", ylabel=r"Line amplitude (\si{\micro V})", xlim=(-1, 23.5), ylim=(2, 800))
     ax[1].legend(loc="lower left", fontsize=6.4, handlelength=1.4)
     math_ticks(ax[1])
     panel(ax[1], "b")
@@ -256,31 +257,31 @@ def fig_dispersion():
     f13, f20 = A.FITS["13"], A.FITS["20"]
     x13 = (f13["U"] - f13["pC"][0]) * mTV
     x20 = (f20["U"] - f13["pC"][0]) * mTV
-    ax[0].plot(x13, f13["X"], "o", ms=1.8, color=GRAY, mfc="none", mew=0.5, label=r"13: plunger \qty{20.00}{mm}")
-    ax[0].plot(x20, f20["X"], "o", ms=1.8, color="k", mfc="none", mew=0.5, label=r"20: plunger \qty{25.60}{mm}")
-    ax[0].plot(x13, f13["fC"](f13["U"], *f13["pC"]), color=BLUE, lw=0.9, label="Fit")
-    ax[0].plot(x20, f20["fC"](f20["U"], *f20["pC"]), color=BLUE, lw=0.9)
-    ax[0].set(xlabel=r"$B-B(U_0^{(13)})$ (mT)", ylabel=r"$X$ (\si{\micro V})", xlim=(-1.6, 2.4))
+    ax[0].plot(x13, SIGN * f13["X"], "o", ms=1.8, color=GRAY, mfc="none", mew=0.5, label=r"13: plunger \qty{20.00}{mm}")
+    ax[0].plot(x20, SIGN * f20["X"], "o", ms=1.8, color="k", mfc="none", mew=0.5, label=r"20: plunger \qty{25.60}{mm}")
+    ax[0].plot(x13, SIGN * f13["fC"](f13["U"], *f13["pC"]), color=BLUE, lw=0.9, label="Fit")
+    ax[0].plot(x20, SIGN * f20["fC"](f20["U"], *f20["pC"]), color=BLUE, lw=0.9)
+    ax[0].set(xlabel=r"$B-B(U_0^{(13)})$ (mT)", ylabel=r"Signal $S=-X$ (\si{\micro V})", xlim=(-1.6, 2.4))
     ax[0].legend(loc="lower right", fontsize=6.4, handlelength=1.2)
     math_ticks(ax[0])
     panel(ax[0], "a")
-    c0, cd = A.c0, A.cd
+    c0, cd = SIGN * A.c0, SIGN * A.cd
     # 24-27 scaled to the power of 13 (X375A scales signal and reference, signal ∝ P)
-    c_ref = np.array([complex(*A.FITS[k]["pC"][2:4]) / 10 ** (-(A.FITS[k]["x375"] - 2) / 10) for k in ("24", "25", "26", "27")])
+    c_ref = SIGN * np.array([complex(*A.FITS[k]["pC"][2:4]) / 10 ** (-(A.FITS[k]["x375"] - 2) / 10) for k in ("24", "25", "26", "27")])
     ax[1].plot(c_ref.real, c_ref.imag, "o", ms=2.6, color=BLUE, mfc="none", mew=0.6)
     ax[1].plot([0, c0.real], [0, c0.imag], "-o", color=GRAY, ms=3, lw=1)
     ax[1].plot([0, cd.real], [0, cd.imag], "-o", color="k", ms=3, lw=1)
     th = np.linspace(np.angle(c0), np.angle(c0) + np.radians(A.dphi_th), 60)
     ax[1].plot(abs(c0) * np.cos(th), abs(c0) * np.sin(th), ":", color=GRAY, lw=0.8)
-    ax[1].text(c0.real + 10, c0.imag - 40, "13", ha="center", va="top", fontsize=7, color=GRAY)
-    ax[1].text(c_ref.real.mean() + 20, c_ref.imag.mean() + 45, "24--27", ha="center", va="bottom", fontsize=7, color=BLUE)
+    ax[1].text(c0.real + 10, c0.imag + 40, "13", ha="center", va="bottom", fontsize=7, color=GRAY)
+    ax[1].text(c_ref.real.mean() + 20, c_ref.imag.mean() - 45, "24--27", ha="center", va="top", fontsize=7, color=BLUE)
     ax[1].text(cd.real + 15, cd.imag, "20", ha="left", va="center", fontsize=7)
     ax[0].text(0.97, 0.96, rf"13$\to$20: $\ang{{{A.dphi:.0f}}}$" + "\n" + rf"24--27$\to$20: $\ang{{{A.dphi_alt:.0f}}}$" + "\n"
                + rf"WR-90: $\ang{{{A.dphi_th:.1f}}}$", transform=ax[0].transAxes, va="top", ha="right", fontsize=6.8)
     ax[1].axhline(0, color=GRAY, lw=0.4)
     ax[1].axvline(0, color=GRAY, lw=0.4)
     ax[1].set(xlabel=r"Absorption component $a$ (\si{\micro V})", ylabel=r"Dispersion component $d$ (\si{\micro V})",
-              aspect="equal", xlim=(-530, 300), ylim=(-90, 470))
+              aspect="equal", xlim=(-300, 530), ylim=(-470, 90))
     math_ticks(ax[1])
     panel(ax[1], "b")
     save(fig, "dispersion.pdf")
@@ -296,21 +297,21 @@ def fig_mncl2():
     a1 = fig.add_subplot(gs[1], sharex=a0)
     h = A.main
     B = h["B"]
-    X = A.X_M
+    X = SIGN * A.X_M
     gs_ = A.gauss_M
     a0.plot(B, X, "o", ms=1.6, color="k", mfc="none", mew=0.4, label="Data (22)")
-    a0.plot(B, h["f"](B, *h["q"]), color=BLUE, lw=1.1, label="Lorentz (VVW), free admixture")
-    a0.plot(B, gs_["f"](gs_["B"], *gs_["q"]), color=RED, lw=0.9, ls="--", label="Gauss")
+    a0.plot(B, SIGN * h["f"](B, *h["q"]), color=BLUE, lw=1.1, label="Lorentz (VVW), free admixture")
+    a0.plot(B, SIGN * gs_["f"](gs_["B"], *gs_["q"]), color=RED, lw=0.9, ls="--", label="Gauss")
     BD = A.B_D * A.nu_M / A.nu_D
     a0.axvline(BD, color=ORANGE, lw=0.8)
     a0.axvline(h["q"][0], color=BLUE, lw=0.8, ls=":")
-    a0.text(BD + 3, -0.3, r"DPPH: $g=\num{2.0036}$", color=ORANGE, fontsize=7)
-    a0.text(h["q"][0] - 3, 0.3, "Line center", color=BLUE, fontsize=7, ha="right")
-    a0.set(ylabel=r"$X$ (\si{\micro V})")
-    a0.legend(loc="upper left", fontsize=6.8, handlelength=1.4)
+    a0.text(BD + 3, 0.3, r"DPPH: $g=\num{2.0036}$", color=ORANGE, fontsize=7)
+    a0.text(h["q"][0] - 3, -0.3, "Line center", color=BLUE, fontsize=7, ha="right")
+    a0.set(ylabel=r"Signal $S=-X$ (\si{\micro V})")
+    a0.legend(loc="lower left", fontsize=6.8, handlelength=1.4)
     plt.setp(a0.get_xticklabels(), visible=False)
-    a1.plot(B, X - h["f"](B, *h["q"]), color=BLUE, lw=0.7)
-    a1.plot(B, X - gs_["f"](gs_["B"], *gs_["q"]), color=RED, lw=0.7)
+    a1.plot(B, X - SIGN * h["f"](B, *h["q"]), color=BLUE, lw=0.7)
+    a1.plot(B, X - SIGN * gs_["f"](gs_["B"], *gs_["q"]), color=RED, lw=0.7)
     a1.axhline(0, color=GRAY, lw=0.4)
     a1.set(xlabel=r"$B$ (mT, DPPH scale)", ylabel="Residual")
     math_ticks(a0, a1)

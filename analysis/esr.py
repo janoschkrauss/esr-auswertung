@@ -21,6 +21,15 @@ NU_DPPH = np.array([9.359428163, 9.359371608, 9.359354867, 9.359397036, 9.359386
 NU_MNCL2 = np.array([9.352759537, 9.352680672, 9.352682294, 9.352728502]) * 1e9
 
 
+# Sign convention of the reported signal. The lock-in phase was set with Auto Phase at U = 5.9 V, on the high-field
+# flank of the MnCl2 line, where the absorption derivative is negative; Auto Phase made it positive there. The raw X is
+# therefore the negative of the usual signal: the derivative of an absorption line comes out negative on its rising
+# (low-field) side. The fits run on the raw X; the figures, tables and all signed amplitudes in the report use
+# S = SIGN * X, for which the absorption derivative is positive on the rising and negative on the falling side.
+# (The line models are linear in the amplitudes a and d, so fitting S instead of X only flips their signs.)
+SIGN = -1
+
+
 def load(name):
     """Lock-in file: columns U (V), X, Y, R (V). The first row is dropped in every file (signal not settled)."""
     return np.loadtxt(DATA / name).T[:, 1:]

@@ -79,7 +79,8 @@ this as a one-sided systematic.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{figures/lineshape.pdf}
-  \caption{DPPH line in up-sweep 15 and in down-sweep 18 (otherwise identical settings). Gray: Lorentzian line; blue:
+  \caption{DPPH line in up-sweep 15 and in down-sweep 18 (otherwise identical settings), shown as the signal $S=-X$
+  (\cref{sec:setup}): the derivative of the absorption is positive on the rising and negative on the falling side. Gray: Lorentzian line; blue:
   Lorentzian line convolved with a one-sided field distribution of length $\lambda$ (\cref{eq:convolution}). Bottom: the
   residuals (measurement minus fit). The long tail lies on the high-field side in both sweep directions.}
   \label{fig:lineshape}
@@ -138,8 +139,16 @@ the \qty{2.3}{\percent} by which the display reads too low.
   \label{fig:modulation}
 \end{figure}
 
-I tried to measure the alternating field of the modulation coils directly, but in AC mode the gaussmeter showed only its
-noise (\qty{0.04}{mT}) at all amplitudes. The DPPH lines themselves give an upper bound on $\Bm$ instead.
+I tried to measure the alternating field of the modulation coils directly with the gaussmeter in AC mode, at the
+modulation frequency of \qty{133}{Hz} and on its most sensitive range, \qty{30}{mT} (\qty{300}{G}, resolution
+\qty{10}{\micro T}). The F.\,W.\,Bell 5080 has no lower range, and its bandwidth (dc to \qty{20}{kHz}) covers
+\qty{133}{Hz}~\cite{fwbell}. At all Sine Out voltages (\qtyrange{0.1}{4}{V}) it showed only its noise
+(\qty{0.04}{mT}). The limit was therefore the sensitivity, not the frequency: the bound derived below,
+$\Bm<\qty{0.06}{mT}$ at \qty{1}{V} and $<\qty{0.11}{mT}$ in the limited state, is comparable to this noise. A very
+low modulation frequency (e.g.\ \qty{0.1}{Hz}) would have let me follow the oscillating field in DC mode and average
+over many periods; I did not try this. Such a calibration would still have to be transferred to \qty{133}{Hz}, because
+the inductive impedance of the modulation coils grows with frequency. Since the direct measurement failed, the DPPH
+lines themselves give an upper bound on $\Bm$.
 
 In the modulation series I changed only the Sine Out voltage $U_\mathrm m$ (\cref{fig:modulation}). Up to \qty{1}{V} the
 peak-to-peak signal $S_\mathrm{pp}$ (the distance between maximum and minimum of the line) grows in proportion to
@@ -166,7 +175,7 @@ As long as $\Bm$ is small compared with the line width, the signal grows in prop
 the same. A large $\Bm$ gives a good signal-to-noise ratio, a small one an undistorted width; the lab manual recommends
 one fifth to one third of the line width. For DPPH, $\Bm$ at \qty{1}{V} was at most a quarter of $\Bpp$, so within or
 below this range, and the amplifier could not reach overmodulation. For \ce{MnCl2}, $\Bm$ is at least a thousand times
-smaller than the line. The signal becomes tiny (\cref{sec:mncl2}), but the line shape stays exact.
+smaller than the line, because the resonance is very broad. The signal becomes tiny (\cref{sec:mncl2}), but the line shape stays exact.
 
 % --------------------------------------------------------------------
 \subsection{Microwave power and reference arm}\label{sec:power}
@@ -174,16 +183,19 @@ smaller than the line. The signal becomes tiny (\cref{sec:mncl2}), but the line 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{figures/power.pdf}
-  \caption{(a)~Power series with X375A (scans 24 to 27 at \qtyrange{6}{20}{dB}, scan 13 at \qty{2}{dB}):
+  \caption{Role of the two attenuators. The main attenuator X375A sits before the magic T and sets the microwave power
+  at the cavity (and the reference with it). The reference-arm attenuator X382A only weakens the reference wave and
+  leaves the power at the cavity unchanged. (a)~Power series with the main attenuator X375A (scans 24 to 27 at
+  \qtyrange{6}{20}{dB}, scan 13 at \qty{2}{dB}):
   peak-to-peak signal versus power relative to \qty{2}{dB}; dashed: the fit to 24 to 27. Scan~13 (red)
-  comes from an earlier measurement block. (b)~Series with the attenuator X382A in the reference arm (scans 13 to 17b):
-  magnitude of the line, $|a+\ii d|$ from \cref{eq:convolution}, and its phase $\arg(a+\ii d)$. Dashed: the decrease if the
+  comes from an earlier measurement block. (b)~Series with the reference-arm attenuator X382A (scans 13 to 17b):
+  magnitude of the line, $|a+\ii d|$ from \cref{eq:convolution}, and its phase $\arg(a+\ii d)$ (for the signal $S=-X$). Dashed: the decrease if the
   signal were proportional to the reference amplitude, which passes through X382A twice.}
   \label{fig:power}
 \end{figure}
 
 \paragraph{Power series.}
-X375A sits before the magic T. It attenuates the wave to the cavity and the reference wave equally, so both amplitudes
+The main attenuator X375A sits before the magic T. It attenuates the wave to the cavity and the reference wave equally, so both amplitudes
 grow with $\sqrt P$. By \cref{eq:diode} a square-law diode then gives a signal proportional to $E_bE_c\propto P$; a
 detector measuring the amplitude instead of the power would give only $\sqrt P$. Over \qty{14}{dB} I find
 $S_\mathrm{pp}\propto P^{\num{0.98(3)}}$ (\cref{fig:power}a). This is consistent with square-law detection, and I
@@ -198,7 +210,7 @@ part is \qty{86}{\percent} of the mean of scans 24 to 27 (scatter \qty{8}{\perce
 \qty{52}{\percent} (scatter \qty{9}{\percent}). Since mainly dispersion is missing, I look for the cause in the bridge rather than in the spins (below).
 
 \paragraph{Series with X382A.}
-In scans 13 to 17b I changed X382A in the reference arm instead. It leaves the power at the cavity unchanged and only
+In scans 13 to 17b I changed the reference-arm attenuator X382A instead. It leaves the power at the cavity unchanged and only
 weakens the reference wave $E_b$ in \cref{eq:diode}. The reference passes through it twice, so at \qty{20}{dB} $E_b$
 drops by a factor of 100, and the signal $\propto E_b$ should drop by the same factor (dashed in \cref{fig:power}b).
 In fact its magnitude drops only by a factor of 3.1, and its phase rotates by \ang{-102}, from mostly absorption to
@@ -208,13 +220,13 @@ phase, not that of the plunger, decides which part of $\chi$ the diode sees. The
 of the reference (\qty{0}{dB}). Only X375A is suitable for power series.
 
 \paragraph{Size of the leak.}
-Two measurements show the leak directly. With the leak $\rho e^{\ii\psi}$ added to the reference amplitude
+I estimated the size of the leak from two independent measurements. With the leak $\rho e^{\ii\psi}$ added to the reference amplitude
 $r=10^{-A/10}$ ($A$ is the X382A setting, passed twice), \cref{eq:diode} requires each part of the signal to be linear
-in $r$. The absorption part is: $a=\alpha r+\beta$ with $\alpha=\qty{-589}{\micro V}$ and $\beta=\qty{73}{\micro V}$,
+in $r$. The absorption part is: $a=\alpha r+\beta$ with $\alpha=\qty{589}{\micro V}$ and $\beta=\qty{-73}{\micro V}$,
 scatter \qty{6}{\micro V} for $r=\numrange{0.01}{0.5}$. The offset $\beta$ is the leak, and at $A=\qty{9.1}{dB}$ reference
 and leak cancel in the absorption. The dispersion part is not reproducible. Scans 16 and 16b, taken with the same
-settings, have the same absorption part (\qty{12.3}{\micro V} and \qty{12.0}{\micro V}) but dispersion parts of
-\qty{156}{\micro V} and \qty{108}{\micro V}. The leak seems to drift, mainly in the dispersion, which is also the part
+settings, have the same absorption part (\qty{-12.3}{\micro V} and \qty{-12.0}{\micro V}) but dispersion parts of
+\qty{-156}{\micro V} and \qty{-108}{\micro V}. The leak seems to drift, mainly in the dispersion, which is also the part
 missing in scan~13.
 
 The second measurement is the DC voltage of the diode at zero field, which I read on the oscilloscope for seven settings
@@ -227,7 +239,7 @@ $\rho=\num{0.26}$ and $\cos\psi=\num{-0.78}$. The leak is a quarter of the refer
 bias drops from \qty{1.93}{mV} at \qty{0}{dB} to \qty{0.08}{mV} at \qty{6.9}{dB}. Above about \qty{7}{dB} the leak is the
 stronger wave, which is why the line turns into dispersion at \qtyrange{10}{20}{dB}.
 
-The absorption part of scan~13 is also off the straight line (\qty{-348}{\micro V} instead of \qty{-516}{\micro V}).
+The absorption part of scan~13 is also off the straight line (\qty{348}{\micro V} instead of \qty{516}{\micro V}).
 Scaled to \qty{2}{dB}, scans 13 and 24 to 27 reach on average only 0.76 of the line value, as if \qty{1.2(4)}{dB} less
 power had reached the cavity than in 14 to 18. At 15:53 I wrote in my lab notebook that I might have set X375A to
 \qty{1}{dB} instead of \qty{2}{dB} before. Such a step between the blocks would explain the difference. I compare
@@ -240,19 +252,21 @@ signal sizes and phases only within one block; positions, widths and line shapes
   \centering
   \includegraphics[width=\textwidth]{figures/dispersion.pdf}
   \caption{Dispersion. (a)~Scan~13 (plunger at \qty{20.00}{mm}) and scan~20 (\qty{25.60}{mm}), otherwise identical
-  settings, with fits according to \cref{eq:convolution}. The angles at the top right are the measured phase rotations and the
+  settings, shown as the signal $S=-X$, with fits according to \cref{eq:convolution}. The angles at the top right are the measured phase rotations and the
   value for WR-90. (b)~Complex amplitudes $a+\ii d$ of the lines: 13, 20 and 24 to 27 (same plunger position as 13,
   scaled to the same power); dotted: the rotation by the WR-90 value.}
   \label{fig:dispersion}
 \end{figure}
 
 For scan~20 I moved only the plunger, from \qty{20.00}{mm} (scan~13) to \qty{25.60}{mm}. This is
-$\Delta z=\qty{5.60}{mm}$, almost exactly $\lamg/8$ (preparatory exercise~2). The line with a zero crossing at the center
-becomes a line with a maximum at the center and two shallow side minima (\cref{fig:dispersion}a): $\dd\chiII/\dd B$ turns
-into $\dd\chiI/\dd B$, as expected.
+$\Delta z=\qty{5.60}{mm}$, almost exactly $\lamg/8$, i.e., $\lamg/4$ in the path of the reference wave (preparatory exercise~2). The line with a zero crossing at the center
+becomes a line with a minimum at the center and two shallow side maxima (\cref{fig:dispersion}a): $\dd\chiII/\dd B$ turns
+into $-\dd\chiI/\dd B$, as expected for a bridge phase rotated by \ang{-90} (\cref{eq:diode}).
 
 To quantify this, I combine the absorption part $a$ and the dispersion part $d$ of each line (\cref{eq:convolution}) into the
-complex amplitude $a+\ii d$. Its angle is the bridge phase $\varphi$ from \cref{eq:diode}. The plunger rotates it by
+complex amplitude $a+\ii d$. Its angle is the effective bridge phase $\varphi$ in \cref{eq:diode}: the phase of the
+total reference wave at the diode, to which the leak from the cavity (\cref{sec:power}) contributes besides the
+reference arm. The plunger rotates it by
 \ang{-87.9} and leaves the magnitude unchanged (ratio \num{0.99}, \cref{fig:dispersion}b). Repeated scans at a fixed
 plunger position scatter in phase by only \ang{1.1}, but the starting angle is uncertain. Scans 24 to 27, taken at the
 same plunger position as 13 and shortly before scan~20, lie \ang{12} away from scan~13 because the leak drifts. With this
@@ -268,8 +282,8 @@ $\lambda_0=\qty{32.0}{mm}$, which would correspond to \ang{-126}. The plunger di
 with the $\lamg/8$ needed to switch between absorption and dispersion.
 
 \paragraph{Check without a line model.}
-Absorption and dispersion are not independent. Because the spins cannot respond before they are driven, $\chiI$ and
-$\chiII$ are Hilbert transforms of each other (Kramers--Kronig relations). The Hilbert transform $H$ commutes with the
+Absorption and dispersion are not independent. Because of causality (the spins cannot respond before they are driven),
+$\chiI$ and $\chiII$ are Hilbert transforms of each other (Kramers--Kronig relations). The Hilbert transform $H$ commutes with the
 derivative and with the smearing by the field distribution. The measured line $S_{13}$ and its transform $H[S_{13}]$ must
 therefore give the line at any other bridge phase, whatever its exact shape:
 \begin{equation}\label{eq:hilbert}
@@ -288,7 +302,7 @@ agrees with the \ang{-87.9} of the model fits within the systematic uncertainty.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{figures/mncl2.pdf}
-  \caption{\ce{MnCl2}, scan~22 on the field scale with the reference \cref{eq:udmn}. Blue: Lorentzian line according to
+  \caption{\ce{MnCl2}, scan~22 on the field scale with the reference \cref{eq:udmn}, shown as the signal $S=-X$. Blue: Lorentzian line according to
   \cref{eq:vvw} with free dispersion admixture and linear baseline; red dashed: Gaussian line. Bottom: the residuals.
   Vertical lines: line center (dotted) and the position that $g=\num{2.0036}$ would have at this frequency.}
   \label{fig:mncl2}

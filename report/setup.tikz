@@ -5,16 +5,17 @@
   mwb/.style={{Latex[length=2mm]}-{Latex[length=2mm]}, line width=1.1pt, draw=black!80},
   lf/.style={-{Latex[length=1.6mm]}, densely dashed, draw=black!65},
   lbl/.style={font=\scriptsize, text=black!75}]
-  % ---------------- Microwave bridge
+  % ---------------- Microwave bridge: source from the left, reference arm on top (opposite the cavity),
+  % ---------------- cavity below, detector diode on the right, as on the real magic T
   \node[box] (dro)  at (-8.0,0) {DRO\\\SI{9.36}{GHz}};
   \node[box] (iso)  at (-6.2,0) {Isolator};
   \node[box] (pick) at (-4.3,0) {Directional\\coupler};
-  \node[box] (att1) at (-2.3,0) {X375A\\0--20\,dB};
+  \node[box] (att1) at (-2.3,0) {Main att.\\X375A\\0--20\,dB};
   \node[box, minimum width=12mm, minimum height=12mm] (tee) at (0,0) {Magic-T};
-  \node[box] (att2) at (2.3,0) {X382A\\0--50\,dB};
-  \node[box] (plunger) at (4.3,0) {Plunger\\$z$};
+  \node[box] (att2) at (0,1.8) {Reference-arm att.\\X382A, 0--50\,dB};
+  \node[box] (plunger) at (0,3.4) {Plunger $z$};
   \node[box] (counter) at (-4.3,1.55) {Counter\\HP\,5342A};
-  \node[box] (diode) at (0,1.75) {Diode\\HP\,8471E};
+  \node[box] (diode) at (2.45,0) {Diode\\HP\,8471E};
   \node[box, minimum width=13mm] (cav) at (0,-1.85) {Cavity\\TE$_{102}$};
   \fill[black!12, draw=black!70] (-1.35,-2.55) rectangle (-0.95,-1.15);
   \fill[black!12, draw=black!70] ( 0.95,-2.55) rectangle ( 1.35,-1.15);
@@ -27,19 +28,20 @@
   \draw[mwb] (tee) -- (att2);
   \draw[mwb] (att2) -- (plunger);
   \draw[mwb] (tee) -- (cav);
-  \draw[mw] (tee) -- node[right, lbl] {$\Delta$} (diode);
+  \draw[mw] (tee) -- node[above, lbl] {$\Delta$} (diode);
+  \node[lbl, anchor=west] at (0.15,0.85) {reference arm};
   % ---------------- Electronics
-  \node[box, minimum width=27mm, minimum height=10mm] (lockin) at (6.3,1.75) {Lock-in SR830};
-  \node[box] (pc) at (6.3,3.25) {PC, LabVIEW};
+  \node[box, minimum width=27mm, minimum height=10mm] (lockin) at (6.3,0) {Lock-in SR830};
+  \node[box] (pc) at (7.0,1.75) {PC, LabVIEW};
   \node[box] (delta) at (3.4,-3.9) {Power supply\\SM400};
   \node[box] (modamp) at (6.3,-3.9) {Mod.\\amplifier};
   \node[box] (gauss) at (-3.4,-3.9) {Gaussmeter\\F.\,W.\,Bell 5080};
-  \draw[lf] (diode) -- node[above, lbl, pos=0.5] {In A} (lockin.west |- diode);
-  \draw[lf] (pc) -- node[right, lbl] {GPIB} (lockin);
-  \draw[lf] (5.3,1.25) -- node[pos=0.12, left, lbl] {Aux Out} (5.3,-3.9) -- (delta.east);
-  \draw[lf] (7.3,1.25) -- node[pos=0.12, right, lbl] {Sine Out, \SI{133}{Hz}} (7.3,-3.9) -- (modamp.east);
+  \draw[lf] (diode) -- node[above, lbl] {In A} (lockin);
+  \draw[lf] (pc) -- node[right, lbl] {GPIB} (7.0,0.5);
+  \draw[lf] (5.3,-0.5) -- node[pos=0.3, right, lbl, align=left] {Aux Out\\(DAC), $U$} (5.3,-3.9) -- (delta.east);
+  \draw[lf] (7.3,-0.5) -- node[pos=0.3, right, lbl, align=left] {Sine Out,\\\SI{133}{Hz}} (7.3,-3.9) -- (modamp.east);
   \draw[lf] (delta.west) -| node[pos=0.75, right, lbl] {$I$} (1.15,-2.55);
   \draw[lf] (modamp.south) |- (0,-4.75) -| (-1.15,-2.55);
   \draw[lf] (gauss.north) |- node[pos=0.75, above, lbl] {Hall probe} (-1.35,-1.85);
-  \draw[lf] (gauss.west) -| (-5.25,2.6) -| node[pos=0.25, above, lbl] {Aux In} (5.95,2.25);
+  \draw[lf] (gauss.west) -| (-9.0,4.3) -| node[pos=0.75, right, lbl] {Aux In (ADC)} (5.6,0.5);
 \end{tikzpicture}
